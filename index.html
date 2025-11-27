@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crypto Monitor</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 20px;
+      background: #1e1e1e;
+      color: white;
+    }
+    h1 { font-size: 20px; margin-bottom: 16px; }
+    .price { margin: 12px 0; padding: 10px; background: #2a2a2a; border-radius: 8px; }
+    button {
+      margin-top: 20px;
+      padding: 10px 16px;
+      background: #0088cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>📈 Crypto Monitor</h1>
+  <div id="prices">Загрузка...</div>
+  <button onclick="refresh()">Обновить</button>
+
+  <script>
+    // Инициализация Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // раскрыть на всю высоту
+    tg.MainButton.setText("Сигналы");
+    tg.MainButton.show();
+
+    // Пример данных (в реальности — fetch с Binance API через прокси или backend)
+    const coins = ['DOGE', 'XRP', 'TON'];
+    const mockPrices = {
+      DOGE: (0.12 + Math.random() * 0.02).toFixed(4),
+      XRP: (0.55 + Math.random() * 0.03).toFixed(4),
+      TON: (3.2 + Math.random() * 0.1).toFixed(4)
+    };
+
+    function displayPrices() {
+      let html = '';
+      coins.forEach(coin => {
+        html += `<div class="price">${coin}: ${mockPrices[coin]} USDT</div>`;
+      });
+      document.getElementById('prices').innerHTML = html;
+    }
+
+    function refresh() {
+      // В реальном приложении: вызов fetch к твоему бэкенду
+      alert('Обновление через бэкенд (например, Binance API)');
+    }
+
+    displayPrices();
+  </script>
+</body>
+</html>
