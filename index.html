@@ -1,64 +1,219 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Crypto Monitor</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smoky Bro</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      padding: 20px;
-      background: #1e1e1e;
-      color: white;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    h1 { font-size: 20px; margin-bottom: 16px; }
-    .price { margin: 12px 0; padding: 10px; background: #2a2a2a; border-radius: 8px; }
-    button {
-      margin-top: 20px;
-      padding: 10px 16px;
-      background: #0088cc;
-      color: white;
-      border: none;
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+
+    /* Анимированный фон */
+    .bg-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 30%, rgba(10, 10, 20, 0.8) 0%, rgba(0, 0, 0, 1) 100%);
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 2s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .planet {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(45deg, #5a3d7c, #3b2a5e);
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(100, 50, 200, 0.5);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(20, 20, 30, 0.8);
+      border-radius: 12px;
+      margin-bottom: 30px;
+      font-size: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .greeting {
+      font-weight: bold;
+    }
+
+    .timer {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px 8px;
       border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .menu-item {
+      padding: 16px;
+      background: rgba(30, 30, 40, 0.7);
+      border-radius: 12px;
+      text-align: center;
+      font-size: 18px;
       cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .menu-item:hover {
+      background: rgba(60, 60, 90, 0.5);
+      transform: scale(1.02);
+    }
+
+    .menu-item:active {
+      transform: scale(0.98);
+    }
+
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 12px;
+      color: #888;
     }
   </style>
 </head>
 <body>
-  <h1>📈 Crypto Monitor</h1>
-  <div id="prices">Загрузка...</div>
-  <button onclick="refresh()">Обновить</button>
+
+  <!-- Фон -->
+  <div class="bg-pattern"></div>
+
+  <!-- Звёзды -->
+  <script>
+    for (let i = 0; i < 50; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.width = Math.random() * 3 + 1 + 'px';
+      star.style.height = star.style.width;
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      document.body.appendChild(star);
+    }
+
+    // Планета
+    const planet = document.createElement('div');
+    planet.classList.add('planet');
+    planet.style.right = '10%';
+    planet.style.top = '20%';
+    document.body.appendChild(planet);
+  </script>
+
+  <!-- Шапка -->
+  <div class="header">
+    <span class="greeting">Добро пожаловать в Smoky Bro, <span id="user-name">Евгений Олегович</span></span>
+    <span class="timer" id="timer">00:59</span>
+  </div>
+
+  <!-- Меню -->
+  <div class="menu">
+    <div class="menu-item" onclick="showMessage('🌍 Глобальный поиск товаров')">
+      Глобальный поиск товаров
+    </div>
+    <div class="menu-item" onclick="showMessage('🛒 Поиск по магазину!')">
+      Поиск по магазину!
+    </div>
+    <div class="menu-item" onclick="showMessage('👤 Профиль')">
+      Профиль
+    </div>
+    <div class="menu-item" onclick="showMessage('🔥 Акции')">
+      Акции
+    </div>
+    <div class="menu-item" onclick="showMessage('📦 Новый товары')">
+      Новый товары
+    </div>
+  </div>
+
+  <div class="footer">
+    © 2025 Smoky Bro • Все права защищены
+  </div>
 
   <script>
     // Инициализация Telegram WebApp
     const tg = window.Telegram.WebApp;
-    tg.expand(); // раскрыть на всю высоту
-    tg.MainButton.setText("Сигналы");
+    tg.expand(); // Раскрыть на всю высоту
+
+    // Установка имени пользователя
+    if (tg.initDataUnsafe.user) {
+      const userName = `${tg.initDataUnsafe.user.first_name || ''} ${tg.initDataUnsafe.user.last_name || ''}`.trim();
+      if (userName) {
+        document.getElementById('user-name').textContent = userName;
+      }
+    }
+
+    // Таймер (можно заменить на реальное время)
+    let seconds = 59;
+    const timerEl = document.getElementById('timer');
+    const interval = setInterval(() => {
+      seconds--;
+      if (seconds < 0) {
+        clearInterval(interval);
+        timerEl.textContent = "00:00";
+        return;
+      }
+      timerEl.textContent = `00:${seconds.toString().padStart(2, '0')}`;
+    }, 1000);
+
+    // Функция для отображения сообщений
+    function showMessage(text) {
+      alert(text);
+      // В реальном приложении здесь можно:
+      // - Отправить запрос на бэкенд
+      // - Открыть новую страницу
+      // - Отправить сообщение через бота
+    }
+
+    // Можно добавить кнопку MainButton
+    tg.MainButton.setText("Начать");
     tg.MainButton.show();
-
-    // Пример данных (в реальности — fetch с Binance API через прокси или backend)
-    const coins = ['DOGE', 'XRP', 'TON'];
-    const mockPrices = {
-      DOGE: (0.12 + Math.random() * 0.02).toFixed(4),
-      XRP: (0.55 + Math.random() * 0.03).toFixed(4),
-      TON: (3.2 + Math.random() * 0.1).toFixed(4)
-    };
-
-    function displayPrices() {
-      let html = '';
-      coins.forEach(coin => {
-        html += `<div class="price">${coin}: ${mockPrices[coin]} USDT</div>`;
-      });
-      document.getElementById('prices').innerHTML = html;
-    }
-
-    function refresh() {
-      // В реальном приложении: вызов fetch к твоему бэкенду
-      alert('Обновление через бэкенд (например, Binance API)');
-    }
-
-    displayPrices();
+    tg.MainButton.onClick(() => {
+      showMessage("🚀 Начинаем работу!");
+    });
   </script>
+
 </body>
 </html>
